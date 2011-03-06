@@ -1,4 +1,4 @@
-# F# SudokuSolver project
+# F# SudokuSolver Projekt
 
 ## Spielregeln
 
