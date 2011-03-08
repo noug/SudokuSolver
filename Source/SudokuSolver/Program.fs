@@ -1,27 +1,63 @@
-﻿let field1 =
-    [[1; 2; 3; 4]
-     [0; 4; 1; 2]
-     [0; 3; 0; 0]
-     [2; 0; 0; 0]]
+﻿open System.Collections.Generic
 
-let field1_solved =
-    [[1; 2; 3; 4]
-     [3; 4; 1; 2]
-     [4; 3; 2; 1]
-     [2; 1; 4; 3]]
+let rec transpose = function
+    | (_::_)::_ as M -> List.map List.head M :: transpose (List.map List.tail M)
+    | _ -> []
 
-let field2 =
-    [[0; 0; 8;  3; 0; 0;  6; 0; 0]
-     [0; 0; 4;  0; 0; 0;  0; 1; 0]
-     [6; 7; 0;  0; 8; 0;  0; 0; 0]
+let GetRows = id
+let GetCols = transpose
+let GetBoxes = id // Homework
 
-     [0; 1; 6;  4; 3; 0;  0; 0; 0]
-     [0; 0; 0;  7; 9; 0;  0; 2; 0]
-     [0; 9; 0;  0; 0; 0;  4; 0; 1]
+let isAllUnique numbers = 
+    let set = new HashSet<_>()
+    numbers
+    |> Seq.filter ((<>) 0)
+    |> Seq.forall set.Add
 
-     [0; 0; 0;  9; 1; 0;  0; 0; 5]
-     [0; 0; 3;  0; 5; 0;  0; 0; 2]
-     [0; 5; 0;  0; 0; 0;  0; 7; 4]]
+let isMatrixValid matrix =
+    let rows = GetRows matrix 
+    let cols = GetCols matrix
+    let boxes = GetBoxes matrix
 
-System.Console.ReadLine() |> ignore
+    rows @ cols @ boxes
+      |> Seq.forall isAllUnique
+
+let listContainsZero = List.forall ((<>) 0)
+
+let isComplete matrix =
+    matrix
+      |> Seq.exists listContainsZero
+
+let fillFirstEmptyPosition matrix =  [matrix] // TODO: Homework
+
+let rec solve matrix =
+    if isComplete matrix then [matrix] else
+    matrix
+      |> fillFirstEmptyPosition
+      |> List.filter isMatrixValid
+      |> List.map solve
+      |> List.concat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
